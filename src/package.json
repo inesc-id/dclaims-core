@@ -1,0 +1,16 @@
+{
+  "name": "hypercerts-core",
+  "version": "1.0.1",
+  "description": "Hypercerts Core component",
+  "main": "hc-core.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Joao Santos <joao.marques.santos@tecnico.ulisboa.pt>",
+  "license": "ISC",
+  "dependencies": {
+    "buffer": "^5.0.8",
+    "ipfs-api": "^17.2.4",
+    "promise": "^8.0.1"
+  }
+}
