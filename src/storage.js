@@ -1,10 +1,19 @@
 'use strict'
 var exports = module.exports = {}
-var Promise = require('promise')
-var Buffer = require('buffer/').Buffer
-var ipfsAPI = require('ipfs-api')
-var Ethereum = require('./ethereumAPI.js')
-var ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+// var Promise = require('promise')
+const Ethereum = require('./ethereumAPI.js')
+const ipfsAPI = require('ipfs-api')
+const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+
+// For when https://github.com/ipfs/js-ipfs-api/pull/651 is patched
+/*
+if (typeof window.ipfs === 'undefined') {
+  const ipfsAPI = require('ipfs-api')
+  const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+} else {
+  const ipfs = window.ipfs
+}
+*/
 
 exports.addItem = function (key, item) {
   console.log('Adding item')
@@ -62,7 +71,7 @@ function getLinkFromRegistry (key) {
 
 function addClaimToIPFS (claimsArrayBuffer) {
   return new Promise(function (resolve, reject) {
-    ipfs.files.add([claimsArrayBuffer], function (err, result) {
+    ipfs.files.add(claimsArrayBuffer, function (err, result) {
       if (err) {
         reject('something went wrong adding the file')
       } else {
