@@ -1,19 +1,19 @@
 'use strict'
 var exports = module.exports = {}
 // var Promise = require('promise')
-const Ethereum = require('./ethereumAPI.js')
+const Ethereum = require('./ethereum/ethereumAPI.js')
+// const Ethereum = require('../../ethereum-testing-env/index.js')
 const ipfsAPI = require('ipfs-api')
 const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
 
-// For when https://github.com/ipfs/js-ipfs-api/pull/651 is patched
-/*
-if (typeof window.ipfs === 'undefined') {
-  const ipfsAPI = require('ipfs-api')
-  const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
-} else {
-  const ipfs = window.ipfs
+exports.init = function (type) {
+  return new Promise(function (resolve, reject) {
+    const ipfsAPI = require('ipfs-api')
+    const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+
+    Ethereum.init(type).then(resolve)
+  })
 }
-*/
 
 exports.addItem = function (key, item) {
   console.log('Adding item')
@@ -27,15 +27,52 @@ exports.addItem = function (key, item) {
   })
 }
 
-exports.getItem = function (key) {
+exports.getClaimsListFromIpfs = function (key) {
   return new Promise(function (resolve, reject) {
-    getLinkFromRegistry(key).then(getFileFromIPFS).then(claimsList => {
-      if (claimsList) {
-        resolve([key, claimsList])
-      } else {
-        console.log('NO FILE')
-        resolve(null)
+    getClaimsList(key).then(metaList => {
+      let pr = []
+      let claimsList = {}
+
+      for (let i = 0; i < metaList.length; i++) {
+        pr.push(getFileFromIPFS(metaList[i].ipfsLink))
       }
+      Promise.all(pr).then(resolve)
+    })
+  })
+}
+
+exports.getClaimsCount = function (key) {
+  return new Promise(function (resolve, reject) {
+    Ethereum.getClaimsListCount(key).then(resolve)
+  })
+}
+
+exports.getUserId = function () {
+  return new Promise(function (resolve, reject) {
+    Ethereum.getUserId().then(resolve)
+  })
+}
+
+function getClaimsList (key) {
+  return new Promise(function (resolve, reject) {
+    let claimsList = []
+    Ethereum.getClaimsListCount(key).then(value => {
+      let ps = []
+      for (let i = 0; i < value; i++) {
+        ps.push(Ethereum.getClaim(key, i))
+      }
+      Promise.all(ps)
+    .then((results) => {
+      for (let j = 0; j < results.length; j++) {
+        let claim = {}
+        claim.issuer = results[j][0]
+        claim.ipfsLink = results[j][1]
+        claim.revoked = results[j][2]
+
+        claimsList.push(claim)
+      }
+      resolve(claimsList)
+    }).catch(err => console.log(err))  // First rejected promise
     })
   })
 }
@@ -105,28 +142,15 @@ function getFileFromIPFS (multihash) {
   })
 }
 
-exports.getClaimsListFromIpfs = function (key) {
+exports.getItem = function (key) {
   return new Promise(function (resolve, reject) {
-    Ethereum.getClaimsList(key).then(metaList => {
-      let pr = []
-      let claimsList = {}
-
-      for (let i = 0; i < metaList.length; i++) {
-        pr.push(getFileFromIPFS(metaList[i].ipfsLink))
+    getLinkFromRegistry(key).then(getFileFromIPFS).then(claimsList => {
+      if (claimsList) {
+        resolve([key, claimsList])
+      } else {
+        console.log('NO FILE')
+        resolve(null)
       }
-      Promise.all(pr).then(resolve)
     })
-  })
-}
-
-exports.getClaimsCount = function (key) {
-  return new Promise(function (resolve, reject) {
-    Ethereum.getClaimsListCount(key).then(resolve)
-  })
-}
-
-exports.getUserId = function () {
-  return new Promise(function (resolve, reject) {
-    Ethereum.getUserId().then(resolve)
   })
 }

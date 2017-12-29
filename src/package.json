@@ -1,6 +1,6 @@
 {
   "name": "hypercerts-core",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Hypercerts Core component",
   "main": "hc-core.js",
   "scripts": {
@@ -11,6 +11,8 @@
   "dependencies": {
     "buffer": "^5.0.8",
     "ipfs-api": "^17.2.4",
-    "promise": "^8.0.1"
+    "promise": "^8.0.1",
+    "solc": "^0.4.19",
+    "web3": "^0.20.0"
   }
 }

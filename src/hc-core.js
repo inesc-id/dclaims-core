@@ -2,6 +2,12 @@ var Storage = require('./storage.js')
 
 var exports = module.exports
 
+exports.init = function (type) {
+  return new Promise(function (resolve, reject) {
+    Storage.init(type).then(resolve)
+  })
+}
+
 exports.handleVerification = function (nkey, newClaim) {
   return new Promise(function (resolve, reject) {
     Storage.addItem(nkey, newClaim).then(resolve)
@@ -29,3 +35,11 @@ exports.getUserId = function () {
     Storage.getUserId().then(resolve)
   })
 }
+
+/*
+exports.init(1).then(value => {
+  exports.handleVerification('123', 'asdfghj').then(value2 => {
+    exports.getClaimsJSONByUrl('123').then(console.log)
+  })
+})
+*/
