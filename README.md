@@ -2,6 +2,15 @@
 
 Welcome to Hypercerts! The project is under active development and the information on this page is going to be changing a lot in the next months, be sure to stay up to date. 😁
 
+  * [Overview](#overview)
+  * [How Hypercerts Works](#how-hypercerts-works)
+    + [Store Claims](#store-claims)
+    + [Get Claims](#get-claims)
+    + [Verifiy Claims](#verifiy-claims)
+  * [Usage](#usage)
+    + [Instalation](#instalation)
+    + [API](#api)
+
 ## Overview
 Hypercerts is a verifiable claims platform, built on top of the Hypercers-Core library. Hypercerts uses IPFS and Ethereum to allow users to create claims that can be verified by anyone. It is completely distributed and serverless.
 Hypercerts can be used by any platform. For instance, we built [Hypercerts-News](https://github.com/inesc-id/hypercerts-news) to demonstrate Hypercerts' potential in dealing with Fake News.
@@ -32,6 +41,7 @@ By leveraging the properties of Ethereum and IPFS, Hypercerts-core ensures the i
 
 ## Usage
 
+### Instalation
 > ⚡️ Instructions with Docker comming soon (will turn steps 2 and 3 into a breeze)
 
 1. Install the [hypercerts-core library](https://www.npmjs.com/package/hypercerts-core)
