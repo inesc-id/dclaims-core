@@ -1,11 +1,12 @@
 const fs = require('fs')
 const Web3 = require('web3')
-
+/*
 try {
   const solc = require('solc')
 } catch (err) {
   console.log('Not loading Solc.')
 }
+*/
 
 if (typeof web3 !== 'undefined') {
   web3 = new Web3(web3.currentProvider)
@@ -36,6 +37,7 @@ exports.connectToNode = function (contractAddress) {
 
 exports.deployTestContract = function () {
   return new Promise(function (resolve, reject) {
+    const solc = require('solc')
     let source = fs.readFileSync(__dirname + '/Hypercerts.sol', 'utf8')
     let compiledContract = solc.compile(source, 1)
     let abi = compiledContract.contracts[':Hypercerts'].interface
