@@ -1,6 +1,6 @@
 {
   "name": "hypercerts-core",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Hypercerts Core component",
   "main": "hc-core.js",
   "scripts": {
