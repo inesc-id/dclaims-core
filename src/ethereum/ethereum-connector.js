@@ -1,30 +1,39 @@
 const fs = require('fs')
 const Web3 = require('web3')
-/*
-try {
-  const solc = require('solc')
-} catch (err) {
-  console.log('Not loading Solc.')
-}
-*/
 
-if (typeof web3 !== 'undefined') {
-  web3 = new Web3(web3.currentProvider)
-} else {
+let CONTRACT_ADDRESS
+let mySenderAddress
+
+exports.init = function (type) {
+  return new Promise(function (resolve, reject) {
+    if (typeof web3 !== 'undefined') {
+      web3 = new Web3(web3.currentProvider)
+      resolve()
+    } else {
+      let ethereumRPCAddress
+      if (type.hasOwnProperty('ethereumRPC')) {
+        console.log('Provided custom ethereumRpc')
+        ethereumRPCAddress = type.ethereumRPC
+      } else {
+        console.log('Using default ethereumRPC')
+        ethereumRPCAddress = 'http://localhost:8545'
+      }
     // set the provider you want from Web3.providers
-  web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+      web3 = new Web3(new Web3.providers.HttpProvider(ethereumRPCAddress))
   // console.alert('You need to have a Web3 provider. Try Metamask.')
+    }
+    // const CONTRACT_ADDRESS = '0x01ffefba4281b08a4f66b77359c244ba665bbbf2'
+    CONTRACT_ADDRESS = '0x53abb1d321dd254eff936f0caee94effd4e10621'
+
+    mySenderAddress = web3.eth.accounts[0]
+    web3.eth.defaultAccount = mySenderAddress
+    resolve()
+  })
 }
-
-// const CONTRACT_ADDRESS = '0x01ffefba4281b08a4f66b77359c244ba665bbbf2'
-const CONTRACT_ADDRESS = '0x53abb1d321dd254eff936f0caee94effd4e10621'
-
-const mySenderAddress = web3.eth.accounts[0]
-web3.eth.defaultAccount = mySenderAddress
 
 exports.connectToNode = function (contractAddress) {
   return new Promise(function (resolve, reject) {
-    if (contractAddress == 'undefined') {
+    if (contractAddress === 'undefined') {
       contractAddress = CONTRACT_ADDRESS
     }
     web3.eth.defaultAccount = web3.eth.accounts[0]

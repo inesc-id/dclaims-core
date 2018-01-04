@@ -1,15 +1,21 @@
 'use strict'
 var exports = module.exports = {}
-// var Promise = require('promise')
 const Ethereum = require('./ethereum/ethereumAPI.js')
-// const Ethereum = require('../../ethereum-testing-env/index.js')
-const ipfsAPI = require('ipfs-api')
-const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+let ipfsAPI
+let ipfs
 
 exports.init = function (type) {
   return new Promise(function (resolve, reject) {
-    const ipfsAPI = require('ipfs-api')
-    const ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+    ipfsAPI = require('ipfs-api')
+    let IPFS_HOST = '127.0.0.1'
+    if (type.hasOwnProperty('ipfsHost')) {
+      IPFS_HOST = type.ipfsHost
+      console.log('Provided custom ipfsHost ' + '/ip4/' + IPFS_HOST + '/tcp/5001')
+    } else {
+      console.log('Default ipfsHost')
+    }
+    // ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+    ipfs = ipfsAPI('/ip4/' + IPFS_HOST + '/tcp/5001')
 
     Ethereum.init(type).then(resolve)
   })
