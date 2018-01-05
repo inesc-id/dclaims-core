@@ -9,13 +9,20 @@ exports.init = function (type) {
     ipfsAPI = require('ipfs-api')
     let IPFS_HOST = '127.0.0.1'
     if (type.hasOwnProperty('ipfsHost')) {
-      IPFS_HOST = type.ipfsHost
-      console.log('Provided custom ipfsHost ' + '/ip4/' + IPFS_HOST + '/tcp/5001')
+      if (type.ipfsHost == IPFS_HOST) {
+        console.log('--- Its the same ---')
+        ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+      } else {
+        IPFS_HOST = type.ipfsHost
+        console.log('Provided custom ipfsHost ' + '/ip4/' + IPFS_HOST + '/tcp/5001')
+        ipfs = ipfsAPI(IPFS_HOST, '5001', {protocol: 'http'})
+      }
     } else {
       console.log('Default ipfsHost')
+      ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
     }
     // ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
-    ipfs = ipfsAPI('/ip4/' + IPFS_HOST + '/tcp/5001')
+    // ipfs = ipfsAPI('/ip4/' + IPFS_HOST + '/tcp/5001')
 
     Ethereum.init(type).then(resolve)
   })
