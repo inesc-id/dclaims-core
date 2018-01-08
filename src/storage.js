@@ -34,7 +34,8 @@ exports.addItem = function (key, item) {
   return new Promise(function (resolve, reject) {
     addClaimToIPFS(Buffer.from(JSON.stringify(item))).then(value => {
       issueClaim(key, value).then(value2 => {
-        resolve([key, item])
+        // resolve([key, item])
+        resolve(value2)
       })
     })
   })
@@ -92,9 +93,10 @@ function getClaimsList (key) {
 
 function issueClaim (key, item) {
   return new Promise(function (resolve, reject) {
-    Ethereum.issueClaim(key, item).then(function (value) {
-      if (value) {
-        resolve([key, value])
+    Ethereum.issueClaim(key, item).then(function (txid) {
+      if (txid) {
+        // resolve([key, txid])
+        resolve(txid)
       } else {
         reject(false)
       }

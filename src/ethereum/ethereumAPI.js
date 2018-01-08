@@ -41,7 +41,8 @@ exports.issueClaim = function (key, ipfsLink) {
   return new Promise(function (resolve, reject) {
     HypercertsInstance.issueClaim(key, ipfsLink, {gas: 179412}, function (error, result) {
       if (!error) {
-        resolve(true)
+        // resolve(true)
+        resolve(result)
       } else {
         console.error(error)
         reject(error)
