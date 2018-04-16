@@ -6,6 +6,29 @@ const EthereumConnector = require('./ethereum-connector.js')
 // const CONTRACT_ADDRESS = '0x01ffefba4281b08a4f66b77359c244ba665bbbf2'
 let CONTRACT_ADDRESS = '0x53abb1d321dd254eff936f0caee94effd4e10621'
 
+var GAS_PRICE = 212000000
+var GAS_Counter = 0
+
+let gasValues = [
+  2120000,
+  21200000,
+  212000000,
+  2120000000,
+  21200000000
+]
+
+function updateGasPrice () {
+  GAS_PRICE = gasValues[GAS_Counter % gasValues.length]
+  GAS_Counter++
+
+  console.log('updated gas price: ' + GAS_PRICE)
+}
+
+exports.onlyForTesting_setGasPrice = function (gasPrices) {
+  gasValues = gasPrices
+  console.log('Set Gas values')
+}
+
 exports.init = function (type) {
   return new Promise(function (resolve, reject) {
     EthereumConnector.init(type).then(value => {
@@ -39,7 +62,8 @@ exports.init = function (type) {
 
 exports.issueClaim = function (key, ipfsLink) {
   return new Promise(function (resolve, reject) {
-    HypercertsInstance.issueClaim(key, ipfsLink, {gas: 179412}, function (error, result) {
+    // updateGasPrice()
+    HypercertsInstance.issueClaim(key, ipfsLink, {gas: 179412, gasPrice: GAS_PRICE}, function (error, result) {
       if (!error) {
         // resolve(true)
         resolve(result)
