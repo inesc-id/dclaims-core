@@ -1,4 +1,5 @@
 var Storage = require('./storage.js')
+var Publisher = require('./publisher/publisherAPI.js')
 
 var exports = module.exports
 
@@ -11,6 +12,12 @@ var exports = module.exports
 exports.init = function (type) {
   return new Promise(function (resolve, reject) {
     Storage.init(type).then(resolve)
+  })
+}
+
+exports.issueWithPublisher = function (nkey, newClaim) {
+  return new Promise(function (resolve, reject) {
+    Publisher.issueWithPublisher(nkey, JSON.stringify(newClaim)).then(resolve)
   })
 }
 
@@ -66,3 +73,5 @@ exports.getUserId = function () {
 exports.getClaimsCountsJSONByUrl = exports.getClaimsCountsByIndex
 exports.getClaimsJSONByUrl = exports.getClaimsByIndex
 exports.handleVerification = exports.issue
+exports.getFileFromIPFS = Storage.getFileFromIPFS
+exports.addClaimToIPFS = Storage.addClaimToIPFS

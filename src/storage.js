@@ -3,6 +3,13 @@ var exports = module.exports = {}
 const Ethereum = require('./ethereum/ethereumAPI.js')
 let ipfsAPI
 let ipfs
+var IPFS_INIT = false
+var ETHEREUM_INIT = false
+
+function initIPFS () {
+  ipfsAPI = require('ipfs-api')
+  ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+}
 
 exports.init = function (type) {
   return new Promise(function (resolve, reject) {
@@ -12,14 +19,17 @@ exports.init = function (type) {
       if (type.ipfsHost == IPFS_HOST) {
         console.log('--- Its the same ---')
         ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+        IPFS_INIT = true
       } else {
         IPFS_HOST = type.ipfsHost
         console.log('Provided custom ipfsHost ' + '/ip4/' + IPFS_HOST + '/tcp/5001')
         ipfs = ipfsAPI(IPFS_HOST, '5001', {protocol: 'http'})
+        IPFS_INIT = true
       }
     } else {
       console.log('Default ipfsHost')
       ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
+      IPFS_INIT = true
     }
     // ipfs = ipfsAPI('/ip4/127.0.0.1/tcp/5001')
     // ipfs = ipfsAPI('/ip4/' + IPFS_HOST + '/tcp/5001')
@@ -33,7 +43,8 @@ exports.addItem = function (key, item) {
   console.log('Key: ' + key + ' Item: ' + item.toString())
   // window.performance.mark('core-adding-claim-to-ipfs-start' + key.substring(1, 5))
   return new Promise(function (resolve, reject) {
-    addClaimToIPFS(Buffer.from(JSON.stringify(item))).then(value => {
+    // addClaimToIPFS(Buffer.from(JSON.stringify(item))).then(value => {
+    addClaimToIPFS(item).then(value => {
       // window.performance.mark('core-adding-claim-to-ipfs-end' + key.substring(1, 5))
       // window.performance.measure('core-adding-claim-to-ipfs-' + key.substring(1, 5))
       issueClaim(key, value).then(value2 => {
@@ -125,9 +136,13 @@ function getLinkFromRegistry (key) {
   })
 }
 
-function addClaimToIPFS (claimsArrayBuffer) {
+function addClaimToIPFS (item) {
   return new Promise(function (resolve, reject) {
     // window.performance.mark('core-add-claim-to-ipfs-start' + claimsArrayBuffer.toString('utf8'))
+    if (!IPFS_INIT) {
+      initIPFS()
+    }
+    let claimsArrayBuffer = Buffer.from(JSON.stringify(item))
     ipfs.files.add(claimsArrayBuffer, function (err, result) {
       if (err) {
         // reject('something went wrong adding the file')
@@ -141,6 +156,7 @@ function addClaimToIPFS (claimsArrayBuffer) {
     })
   })
 }
+exports.addClaimToIPFS = addClaimToIPFS
 // implement timeout here
 function getFileFromIPFS (multihash) {
   return new Promise(function (resolve, reject) {
@@ -167,6 +183,8 @@ function getFileFromIPFS (multihash) {
     }
   })
 }
+
+exports.getFileFromIPFS = getFileFromIPFS
 
 exports.getItem = function (key) {
   return new Promise(function (resolve, reject) {
