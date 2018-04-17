@@ -4,7 +4,6 @@ const Ethereum = require('./ethereum/ethereumAPI.js')
 let ipfsAPI
 let ipfs
 var IPFS_INIT = false
-var ETHEREUM_INIT = false
 
 function initIPFS () {
   ipfsAPI = require('ipfs-api')
@@ -57,10 +56,12 @@ exports.addItem = function (key, item) {
 
 exports.getClaimsListFromIpfs = function (key) {
   return new Promise(function (resolve, reject) {
+    // Gets the list of IPFS links of claims
     getClaimsList(key).then(metaList => {
       let pr = []
       let claimsList = {}
       for (let i = 0; i < metaList.length; i++) {
+        // Gets the actual claim objects from IPFS
         pr.push(getFileFromIPFS(metaList[i].ipfsLink))
       }
       Promise.all(pr).then(resolve)

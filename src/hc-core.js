@@ -1,5 +1,6 @@
 var Storage = require('./storage.js')
 var Publisher = require('./publisher/publisherAPI.js')
+var Unpacker = require('./unpacker.js')
 
 var exports = module.exports
 
@@ -40,11 +41,14 @@ exports.issue = function (nkey, newClaim) {
 */
 
 exports.getClaimsByIndex = function (claimIndex) {
-  return new Promise(function (fulfill, reject) {
+  return new Promise(function (resolve, reject) {
     Storage.getClaimsListFromIpfs(claimIndex).then(value => {
-      var claimsJSON = {}
-      claimsJSON.claimsList = value
-      fulfill(claimsJSON)
+      Unpacker.unpackClaims(value).then(res => {
+        let claimsJSON = {}
+        claimsJSON.claimsList = res
+        resolve(claimsJSON)
+      })
+      // resolve(claimsJSON)
     })
   })
 }
@@ -75,3 +79,21 @@ exports.getClaimsJSONByUrl = exports.getClaimsByIndex
 exports.handleVerification = exports.issue
 exports.getFileFromIPFS = Storage.getFileFromIPFS
 exports.addClaimToIPFS = Storage.addClaimToIPFS
+
+const RPC_ADDRESS = 'http://146.193.41.153:8545'
+const CONTRACT_ADDRESS = '0xF2F2f7C36fbBA17ad8a28a4680a7059B44C4B626'
+
+let hypercertsSetup =
+  {
+    initType: 2,
+    ethereumRPC: RPC_ADDRESS,
+    contractAddress: CONTRACT_ADDRESS // rinkeby
+  }
+
+// topic: 0x92e343f083451ff6ad2f524f135d140a0d4813cec9c7ab97aa00d5e201003562
+// ipfs link: QmTUbrrWNXAg9dXyCv58V1zhBbL3uASkAYZwzMNvGx4H6h
+let claimIndex = '0x92e343f083451ff6ad2f524f135d140a0d4813cec9c7ab97aa00d5e201003562'
+
+exports.init(hypercertsSetup).then(value => {
+  exports.getClaimsByIndex(claimIndex).then(console.log)
+})
