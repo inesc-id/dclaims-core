@@ -79,9 +79,9 @@ exports.getClaimsJSONByUrl = exports.getClaimsByIndex
 exports.handleVerification = exports.issue
 exports.getFileFromIPFS = Storage.getFileFromIPFS
 exports.addClaimToIPFS = Storage.addClaimToIPFS
-
+/*
 const RPC_ADDRESS = 'http://146.193.41.153:8545'
-const CONTRACT_ADDRESS = '0xF2F2f7C36fbBA17ad8a28a4680a7059B44C4B626'
+const CONTRACT_ADDRESS = '0xfa66a818D2e537F4A861b71a435CfBB1B5A2BdF2'
 
 let hypercertsSetup =
   {
@@ -97,3 +97,4 @@ let claimIndex = '0x92e343f083451ff6ad2f524f135d140a0d4813cec9c7ab97aa00d5e20100
 exports.init(hypercertsSetup).then(value => {
   exports.getClaimsByIndex(claimIndex).then(console.log)
 })
+*/
