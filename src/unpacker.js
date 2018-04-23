@@ -1,6 +1,7 @@
 // let HypercertsCore = require('./hc-core.js')
 var Storage = require('./storage.js')
-let HypercertsNewsClaims = require('../../hypercerts-news-claims/src/index')
+// let HypercertsNewsClaims = require('../../hypercerts-news-claims/src/index')
+let HypercertsNewsClaims = require('hypercerts-news-claims')
 
 /*
 const RPC_ADDRESS = 'http://146.193.41.153:8545'
