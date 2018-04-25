@@ -79,6 +79,7 @@ exports.getClaimsJSONByUrl = exports.getClaimsByIndex
 exports.handleVerification = exports.issue
 exports.getFileFromIPFS = Storage.getFileFromIPFS
 exports.addClaimToIPFS = Storage.addClaimToIPFS
+
 /*
 const RPC_ADDRESS = 'http://146.193.41.153:8545'
 const CONTRACT_ADDRESS = '0xfa66a818D2e537F4A861b71a435CfBB1B5A2BdF2'
